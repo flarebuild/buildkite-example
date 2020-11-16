@@ -1,0 +1,5 @@
+steps:
+- commands: 
+  - uuid=`uuidgen`
+  - bazel build //... --bes_backend=grpcs://bes.stg.flare.build --bes_results_url="https://dashboard.stg.flare.build/#/invocations/" --invocation_id=${uuid}
+  - echo "[Invocation ${uuid}](https://dashboard.stg.flare.build/#/invocations/${uuid})" | buildkite-agent annotate --style 'success'
