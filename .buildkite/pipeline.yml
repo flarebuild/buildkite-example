@@ -2,12 +2,10 @@ steps:
 - commands:
   - uuidgen > bazel_invocation_id
   - >
-    uuid=$(cat bazel_invocation_id)
     bazel build //... 
-      --invocation_id=${uuid}
-      --bes_backend=grpcs://bes.stg.flare.build 
-      --bes_results_url="https://dashboard.stg.flare.build/#/invocations/"
+    --invocation_id=$(cat bazel_invocation_id)
+    --bes_backend=grpcs://bes.stg.flare.build 
+    --bes_results_url="https://dashboard.stg.flare.build/#/invocations/"
   - >
-    uuid=$(cat bazel_invocation_id)
-    echo "[Invocation ${uuid}](https://dashboard.stg.flare.build/#/invocations/${uuid})"
+    echo "[Invocation $(cat bazel_invocation_id)](https://dashboard.stg.flare.build/#/invocations/$(cat bazel_invocation_id))"
     | buildkite-agent annotate --style 'success'
