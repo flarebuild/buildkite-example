@@ -1,0 +1,23 @@
+# from repo root
+# sudo docker build . --build-arg BAZELISK_VERSION=v1.7.4 \
+#                   -t gcr.io/flare-build-alpha/bazelisk-bkagent:v1.7.4 \
+#                   -f Dockerfile.bkagent
+# gcloud auth print-access-token | sudo docker login -u oauth2accesstoken --password-stdin https://gcr.io
+# sudo docker push gcr.io/flare-build-alpha/bazelisk-bkagent:v1.7.4
+FROM ubuntu:20.04
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    curl ca-certificates uuid-runtime git python python3 patch binutils build-essential libxml2-dev gnupg && \
+    echo deb https://apt.buildkite.com/buildkite-agent stable main > /etc/apt/sources.list.d/buildkite-agent.list && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 32A37959C2FA5C3C99EFBC32A79206696452D198 && \
+    apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends buildkite-agent && \
+    rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT ["/usr/bin/buildkite-agent", "start"]
+
+ARG BAZELISK_VERSION=v1.7.4
+RUN curl -fSL -o /usr/local/bin/bazel \
+    https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-linux-amd64 \
+    && chmod +x /usr/local/bin/bazel
+
