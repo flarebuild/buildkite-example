@@ -9,3 +9,6 @@ steps:
   - >
     echo "[Invocation $(cat bazel_invocation_id)](https://dashboard.stg.flare.build/#/invocations/$(cat bazel_invocation_id))"
     | buildkite-agent annotate --style 'success'
+  agents:
+    queue: default
+
